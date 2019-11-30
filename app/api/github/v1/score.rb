@@ -19,14 +19,17 @@ module Github
 
                     return { "error": "User does not exist" } if response.empty?
 
-
                     score = 0
 
-                    response.each do |r|
-                        score+=(indi_score[r["type"].to_sym].present? ? indi_score[r["type"].to_sym] : 1)
-                    end
+                    begin
+                        response.each do |r|
+                            score+=(indi_score[r["type"].to_sym].present? ? indi_score[r["type"].to_sym] : 1)
+                        end
 
-                    return {"username": params[:username], "score": score}
+                        return {"username": params[:username], "score": score}
+                    rescue
+                        { "error": response["message"] }
+                    end
                 end
             end
         end
